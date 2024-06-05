@@ -57,6 +57,7 @@ public:
 };
 
 
+
 // time O(n) and space O(1)
 class Solution {
 public:
@@ -83,3 +84,6 @@ public:
         return true;
     }
 };
+
+
+// other soultion would be sort both s and t and compare its O(nlogn) and O(1)
