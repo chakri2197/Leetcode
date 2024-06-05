@@ -1,3 +1,4 @@
+// time complexity O(nk) where n is the number of strings and k is the maximum length of a string
 class Solution {
 public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
@@ -32,4 +33,35 @@ public:
     return res;
 
 }
+};
+
+// Another Solution time complexity O(nklogk) where n is the number of strings and k is the maximum length of a string
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, vector<string>> m;
+        for (const string& str : strs) {
+            string key = getKey(str);
+            m[key].push_back(str);
+        }
+        
+        vector<vector<string>> result;
+        for (const auto& pair : m) {
+            result.push_back(pair.second);
+        }
+        return result;
+    }
+private:
+    string getKey(const string& str) {
+        vector<int> count(26, 0);
+        for (char c : str) {
+            count[c - 'a']++;
+        }
+        
+        string key;
+        for (int c : count) {
+            key += to_string(c) + '#';
+        }
+        return key;
+    }
 };
