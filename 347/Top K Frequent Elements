@@ -1,0 +1,128 @@
+/*
+    Given an integer array nums & an integer k, return the k most frequent elements
+    Ex. nums = [1,1,1,2,2,3] k = 2 -> [1,2], nums = [1] k = 1 -> [1]
+    
+    Heap -> optimize w/ freq map & bucket sort (no freq can be > n), get results from end
+*/
+
+// time: O(n*k) space: O(n)
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        // Create a hash map to store the frequency of each element
+        unordered_map<int, int> map;
+        
+        // Iterate through the nums array and count the frequency of each element
+        for (int n : nums) {
+            map[n]++;
+        }
+
+        // Initialize the result vector to store the top k frequent elements
+        vector<int> res;
+
+        // Loop to find the top k frequent elements
+        for (int i = 0; i < k; i++) {
+            // Initialize max_count to 0 for each iteration
+            int max_count = 0;
+            int ele;
+
+            // Iterate through the map to find the element with the highest frequency
+            for (auto e : map) {
+                if (e.second > max_count) {
+                    max_count = e.second;
+                    ele = e.first;
+                }
+            }
+
+            // Reset max_count to 0 for the next iteration
+            max_count = 0;
+
+            // Erase the element with the highest frequency from the map
+            map.erase(ele);
+
+            // Add the found element to the result vector
+            res.push_back(ele);
+        }
+        
+        // Return the result vector containing the top k frequent elements
+        return res;
+    }
+};
+
+// Time: O(n log k)
+// Space: O(n + k)
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        // Step 1: Create a frequency map to count occurrences of each element
+        unordered_map<int, int> frequencyMap;
+        for (int num : nums) {
+            frequencyMap[num]++;
+        }
+
+        // Step 2: Use a min-heap to keep track of the top k frequent elements
+        // The heap stores pairs of (frequency, element)
+        using freqElementPair = pair<int, int>; // Alias for better readability
+        priority_queue<freqElementPair, vector<freqElementPair>, greater<freqElementPair>> minHeap;
+
+        // Step 3: Iterate over the frequency map and maintain the size of the heap to be k
+        for (const auto& entry : frequencyMap) {
+            minHeap.push({entry.second, entry.first});
+            if (minHeap.size() > k) {
+                minHeap.pop(); // Remove the element with the smallest frequency
+            }
+        }
+
+        // Step 4: Extract elements from the heap into the result vector
+        vector<int> result;
+        while (!minHeap.empty()) {
+            result.push_back(minHeap.top().second);
+            minHeap.pop();
+        }
+
+        // Step 5: Return the result vector containing the top k frequent elements
+        return result;
+    }
+};
+// Time: O(n)
+// Space: O(n)
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        // Get the size of the input vector
+        int n = nums.size();
+        
+        // Create an unordered map to store the frequency of each element
+        unordered_map<int, int> m;
+        for (int i = 0; i < n; i++) {
+            m[nums[i]]++; // Increment the frequency count of each element
+        }
+        
+        // Create a vector of vectors to store elements with the same frequency
+        vector<vector<int>> buckets(n + 1);
+        for (auto it = m.begin(); it != m.end(); it++) {
+            // Assign each element to its corresponding bucket based on its frequency
+            buckets[it->second].push_back(it->first);
+        }
+        
+        // Create a vector to store the result
+        vector<int> result;
+        
+        // Iterate over the buckets starting from the highest frequency
+        for (int i = n; i >= 0; i--) {
+            // If we have already found k frequent elements, break out of the loop
+            if (result.size() >= k) {
+                break;
+            }
+            // If the current bucket is not empty, add its elements to the result vector
+            if (!buckets[i].empty()) {
+                result.insert(result.end(), buckets[i].begin(), buckets[i].end());
+            }
+        }
+        
+        // Return the result vector containing the top k frequent elements
+        return result;
+    }
+};
