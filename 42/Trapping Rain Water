@@ -56,10 +56,6 @@ public:
             sum += x;
         }
 
-        // Optional: Print the trapped water at each position for debugging
-        for (int x : minLM)
-            cout << x << endl;
-
         // Return the total amount of trapped water
         return sum;
     }
