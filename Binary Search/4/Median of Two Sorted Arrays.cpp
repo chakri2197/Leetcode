@@ -27,6 +27,66 @@ nums2.length == n
 -106 <= nums1[i], nums2[i] <= 106
 */
 
+
+// time complexity of this solution is O(log(min(n,m)))
+
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int n1 = nums1.size();
+        int n2 = nums2.size();
+
+        // Ensure nums1 is the smaller array
+        if (n1 > n2) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+
+        // Calculate the partition point
+        int noEleLeft = (n1 + n2 + 1) / 2;
+        int low = 0;
+        int high = n1;
+        
+        while (low <= high) {
+            int mid1 = low + (high - low) / 2;
+            int mid2 = noEleLeft - mid1;
+        
+            // l1 is the maximum element on the left side of the partition in nums1
+            int l1 = (mid1 > 0) ? nums1[mid1 - 1] : INT_MIN;
+            // l2 is the maximum element on the left side of the partition in nums2
+            int l2 = (mid2 > 0) ? nums2[mid2 - 1] : INT_MIN;
+            // r1 is the minimum element on the right side of the partition in nums1
+            int r1 = (mid1 < n1) ? nums1[mid1] : INT_MAX;
+            // r2 is the minimum element on the right side of the partition in nums2
+            int r2 = (mid2 < n2) ? nums2[mid2] : INT_MAX;
+            
+            // Check if the current partition is correct
+            if (l1 <= r2 && l2 <= r1) {
+                // If the total number of elements is even
+                if ((n1 + n2) % 2 == 0) {
+                    // The median is the average of the two middle values
+                    return (max(l1, l2) + min(r1, r2)) / 2.0;
+                } else {
+                    // If the total number of elements is odd
+                    // The median is the maximum element on the left side of the partition
+                    return (double)max(l1, l2);
+                }
+            } else if (l1 > r2) {
+                // If l1 is greater than r2, move left in nums1
+                high = mid1 - 1;
+            } else {
+                // If l2 is greater than r1, move right in nums1
+                low = mid1 + 1;
+            }
+        }
+
+        // If no valid partition is found (this should not happen in a valid input)
+        return 0.0;
+    }
+};
+
+
+
+
 // time complexity of this solution is O(n+m)
 class Solution {
 public:
