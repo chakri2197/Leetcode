@@ -77,7 +77,10 @@ int main() {
 
 
 
-//half solved
+// half solved
+// time complexity of this solution is O(n) and space complexity is O(1)
+
+
 #include <iostream>
 #include <string>
 using namespace std;
